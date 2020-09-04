@@ -217,7 +217,7 @@ package Icons "Icons for physiological models"
   class Lungs
 
     annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
-              -100},{100,100}}), graphics={Bitmap(extent={{-70,-80},{40,92}},
+              -100},{100,100}}), graphics={Bitmap(origin = {21.8182, -5.58144}, extent = {{-101.818, -74.4186}, {58.1818, 85.5814}},
               fileName="modelica://Physiolibrary/Resources/Icons/plice.png")}));
   end Lungs;
 
