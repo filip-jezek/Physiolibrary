@@ -144,7 +144,7 @@ package Types "Physiological units with nominals"
         osmoticPermeability=1.2501026264094e-10,
         diffusionPermeability=1.6666666666667e-08,
         hydraulicConductance=1.2501026264094e-10,
-        hydraulicInertance=479960594694,
+        hydraulicInertance=4.799605947e+11,
         gasSolubility=2.4789568751177,
         gasSATP=0.040339548059044,
         gasNIST=0.041571199502531)

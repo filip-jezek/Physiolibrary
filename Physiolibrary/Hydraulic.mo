@@ -613,7 +613,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
                  0.000338)),
           CAS(k=7.2755972857029e-09),
           SystemicArteries(volume_start=0.000603),
-          SystemicVeins(volume_start=0.003991));
+          SystemicVeins(volume_start=0.003991),
+          PulmonaryVeins(useComplianceInput=true, Compliance(displayUnit=
+                  "ml/mmHg")));
 
         annotation ( Documentation(info="<html>
 <p>Extension of the model of cardiovascular system with pulsatile dynamics</p>
@@ -1388,6 +1390,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
      extends Hydraulic.Interfaces.OnePort;
      extends Icons.HydraulicResistor;
 
+      parameter Boolean enable = true "if false, no resistance is used"
+        annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
+
       parameter Boolean useConductanceInput = false
         "=true, if external conductance value is used"
         annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
@@ -1407,7 +1412,13 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       if not useConductanceInput then
         c=Conductance;
       end if;
-      q_in.q = c * (q_in.pressure - q_out.pressure);
+
+      // conditionally disable the resistance
+      if c >= Modelica.Constants.inf or not enable then
+        q_in.pressure = q_out.pressure;
+      else
+        q_in.q = c * (q_in.pressure - q_out.pressure);
+      end if;
       annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{
                 -100,-100},{100,100}}),
                        graphics={Text(
@@ -1425,9 +1436,11 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
     end Conductor;
 
     model Resistor
-      extends Physiolibrary.Hydraulic.Components.Conductor(final Conductance = 1/Resistance);
+      extends Physiolibrary.Hydraulic.Components.Conductor(final Conductance = conditionalConductance);
       parameter Physiolibrary.Types.HydraulicResistance Resistance
         "Hydraulic conductance if useConductanceInput=false";
+    protected
+                final parameter Physiolibrary.Types.HydraulicConductance conditionalConductance = if Resistance == 0 then Modelica.Constants.inf else 1/Resistance;
     end Resistor;
 
     model ElasticVessel "Elastic container for blood vessels, bladder, lumens"
@@ -1649,7 +1662,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
     model IdealValve
       extends Interfaces.OnePort;
       parameter Boolean useChatteringProtection = false annotation(Evaluate = true);
-      parameter Physiolibrary.Types.Time chatteringProtectionTime = 0 "Minimal period of time, in which a closed valve stays closed";
+      parameter Physiolibrary.Types.Time chatteringProtectionTime(displayUnit="ms") = 0 "Minimal period of time, in which a closed valve stays closed";
       Physiolibrary.Types.Time lastChange(start = 0);
        Boolean open(start=true) "Switching state";
        Real passableVariable(start=0, final unit="1")
