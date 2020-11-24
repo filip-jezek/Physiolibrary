@@ -1015,7 +1015,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
             annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
           parameter Physiolibrary.Types.HydraulicElastance EMAX
             "Maximum systolic elastance"         annotation (Dialog(enable=not useEs_extInput));
-        Physiolibrary.Types.RealIO.HydraulicComplianceInput Es_ext(start=1/Ees)=1/es_int if useEs_extInput
+        Physiolibrary.Types.RealIO.HydraulicComplianceInput Es_ext(start=1/EMAX)=1/es_int if useEs_extInput
            annotation (
               Placement(transformation(extent={{60,60},{100,100}}), iconTransformation(
                 extent={{-20,-20},{20,20}},
@@ -1160,8 +1160,8 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
           annotation (Placement(transformation(extent={{150,50},{178,78}})));
         Physiolibrary.Hydraulic.Components.IdealValveResistance AorticValve(
           _Goff(displayUnit="ml/(mmHg.s)") = 0,
-          useLimitationInputs=false,
-          _Ron(displayUnit="(mmHg.s)/ml") = 1066579.09932)
+          _Ron(displayUnit= "(mmHg.min)/ml") = 1066579.09932, chatteringProtectionTime = 0.01, lastChange(displayUnit = "s"), useChatteringProtection = true,
+          useLimitationInputs=false)
           annotation (Placement(transformation(extent={{184,76},{208,52}})));
         Parts.AtrialElastance LAtrialElastance(
           Tav(displayUnit="s"),
@@ -1172,9 +1172,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
             EMAX=533289549.66)
           annotation (Placement(transformation(extent={{164,88},{200,120}})));
         Physiolibrary.Hydraulic.Components.IdealValveResistance MitralValve(
-          useLimitationInputs=false,
+          
           _Goff(displayUnit="ml/(mmHg.s)") = 0,
-          _Ron(displayUnit="(mmHg.s)/ml") = 399967.162245)
+          _Ron(displayUnit= "(mmHg.min)/ml") = 399967.162245, chatteringProtectionTime = 0.01, lastChange(displayUnit = "s"), useChatteringProtection = true,useLimitationInputs=false)
                               annotation (Placement(transformation(
               origin={127,64},
               extent={{-13,12},{13,-12}})));
@@ -1259,9 +1259,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
           ExternalPressure=-533.28954966)
           annotation (Placement(transformation(extent={{-170,42},{-140,72}})));
         Physiolibrary.Hydraulic.Components.IdealValveResistance PulmonaryValve(
-          _Goff(displayUnit="ml/(mmHg.s)") = 0,
-          useLimitationInputs=false,
-          _Ron(displayUnit="(mmHg.s)/ml") = 399967.162245)
+          Pknee = Modelica.Constants.eps,_Goff(displayUnit="ml/(mmHg.s)") = 0,
+          _Ron(displayUnit= "(mmHg.min)/ml") = 399967.162245, chatteringProtectionTime = 0.01, lastChange(displayUnit = "s"), useChatteringProtection = true,
+          useLimitationInputs=false)
           annotation (Placement(transformation(extent={{-132,70},{-106,44}})));
         Parts.AtrialElastance RAtrialElastance(EMIN=6666119.37075, EMAX=
               19998358.11225)
@@ -1271,8 +1271,8 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
           annotation (Placement(transformation(extent={{-180,88},{-150,122}})));
         Physiolibrary.Hydraulic.Components.IdealValveResistance TricuspidValve(
           _Goff=0,
-          useLimitationInputs=false,
-          _Ron(displayUnit="(mmHg.s)/ml") = 399967.162245)
+          _Ron(displayUnit= "(mmHg.min)/ml") = 399967.162245, chatteringProtectionTime = 0.01, lastChange(displayUnit = "s"), open(fixed = true, start = true), useChatteringProtection = true,
+          useLimitationInputs=false)
                               annotation (Placement(transformation(
               origin={-189,58},
               extent={{-13,12},{13,-12}})));
@@ -1707,14 +1707,14 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       end when;
 
       if not useChatteringProtection then
-        open = passableVariable > Modelica.Constants.eps;
+        open = passableVariable > 0;
       else
         if pre(lastChange) + chatteringProtectionTime > time then
           // under protection
           open = pre(open);
         else
           // protection expired
-          open = passableVariable > Modelica.Constants.eps;
+          open = passableVariable > 0;
         end if;
       end if;
 
