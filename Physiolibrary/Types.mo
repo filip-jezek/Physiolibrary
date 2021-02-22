@@ -144,7 +144,7 @@ package Types "Physiological units with nominals"
         osmoticPermeability=1.2501026264094e-10,
         diffusionPermeability=1.6666666666667e-08,
         hydraulicConductance=1.2501026264094e-10,
-        hydraulicInertance=479960594694,
+        hydraulicInertance=4.799605947e+11,
         gasSolubility=2.4789568751177,
         gasSATP=0.040339548059044,
         gasNIST=0.041571199502531)
@@ -6483,7 +6483,6 @@ The Real output y is a constant signal:
   type SimulationType = enumeration(
       NoInit "Use start values only as a guess of state values",
       NormalInit "Initialization by start values",
-      ReadInit "Initialization by function Utilities.readReal('state name')",
       InitSteadyState
         "Initialization in Steady State (initial derivations are zeros)",
       SteadyState "Steady State = Derivations are zeros during simulation")

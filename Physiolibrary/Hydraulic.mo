@@ -359,9 +359,6 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       connect(leftHeart.q_out,arteries. q_in) annotation (Line(
           points={{36,16},{44,16},{44,-36},{24,-36}},
           thickness=1));
-      connect(pressureMeasure.q_in,rightHeart. q_in) annotation (Line(
-          points={{-72,30},{-72,18},{-56,18}},
-          thickness=1));
       connect(pressureMeasure1.q_in, pulmonaryVeinsAndLeftAtrium.q_in)
         annotation (Line(
           points={{-2,30},{-4,30},{-4,60},{32,60},{32,84},{14,84}},
@@ -393,9 +390,6 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       connect(LNormalCO.y, leftStarling.yBase) annotation (Line(
           points={{21,46},{26,46},{26,34}},
           color={0,0,127}));
-      connect(pressureMeasure.q_in, rightAtrium.q_in) annotation (Line(
-          points={{-72,30},{-72,18}},
-          thickness=1));
       connect(rightHeart.solutionFlow, rightStarling.y) annotation (Line(
           points={{-46,25},{-46,28},{-46,28}},
           color={0,0,127}));
@@ -408,6 +402,10 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       connect(pressureMeasure1.pressure, leftStarling.u) annotation (Line(
           points={{8,32},{18,32}},
           color={0,0,127}));
+      connect(pressureMeasure.q_in, rightAtrium.q_in) annotation (Line(
+          points={{-72,30},{-72,18}},
+          color={0,0,0},
+          thickness=1));
       annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
                 -100},{100,100}}), graphics={Text(
               extent={{-82,-80},{80,-100}},
@@ -615,7 +613,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
                  0.000338)),
           CAS(k=7.2755972857029e-09),
           SystemicArteries(volume_start=0.000603),
-          SystemicVeins(volume_start=0.003991));
+          SystemicVeins(volume_start=0.003991),
+          PulmonaryVeins(useComplianceInput=true, Compliance(displayUnit=
+                  "ml/mmHg")));
 
         annotation ( Documentation(info="<html>
 <p>Extension of the model of cardiovascular system with pulsatile dynamics</p>
@@ -1015,7 +1015,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
             annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
           parameter Physiolibrary.Types.HydraulicElastance EMAX
             "Maximum systolic elastance"         annotation (Dialog(enable=not useEs_extInput));
-        Physiolibrary.Types.RealIO.HydraulicComplianceInput Es_ext(start=1/Ees)=1/es_int if useEs_extInput
+        Physiolibrary.Types.RealIO.HydraulicComplianceInput Es_ext(start=1/EMAX)=1/es_int if useEs_extInput
            annotation (
               Placement(transformation(extent={{60,60},{100,100}}), iconTransformation(
                 extent={{-20,-20},{20,20}},
@@ -1160,8 +1160,8 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
           annotation (Placement(transformation(extent={{150,50},{178,78}})));
         Physiolibrary.Hydraulic.Components.IdealValveResistance AorticValve(
           _Goff(displayUnit="ml/(mmHg.s)") = 0,
-          useLimitationInputs=false,
-          _Ron(displayUnit="(mmHg.s)/ml") = 1066579.09932)
+          _Ron(displayUnit= "(mmHg.min)/ml") = 1066579.09932, chatteringProtectionTime = 0.01, lastChange(displayUnit = "s"), useChatteringProtection = true,
+          useLimitationInputs=false)
           annotation (Placement(transformation(extent={{184,76},{208,52}})));
         Parts.AtrialElastance LAtrialElastance(
           Tav(displayUnit="s"),
@@ -1172,9 +1172,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
             EMAX=533289549.66)
           annotation (Placement(transformation(extent={{164,88},{200,120}})));
         Physiolibrary.Hydraulic.Components.IdealValveResistance MitralValve(
-          useLimitationInputs=false,
+          
           _Goff(displayUnit="ml/(mmHg.s)") = 0,
-          _Ron(displayUnit="(mmHg.s)/ml") = 399967.162245)
+          _Ron(displayUnit= "(mmHg.min)/ml") = 399967.162245, chatteringProtectionTime = 0.01, lastChange(displayUnit = "s"), useChatteringProtection = true,useLimitationInputs=false)
                               annotation (Placement(transformation(
               origin={127,64},
               extent={{-13,12},{13,-12}})));
@@ -1259,9 +1259,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
           ExternalPressure=-533.28954966)
           annotation (Placement(transformation(extent={{-170,42},{-140,72}})));
         Physiolibrary.Hydraulic.Components.IdealValveResistance PulmonaryValve(
-          _Goff(displayUnit="ml/(mmHg.s)") = 0,
-          useLimitationInputs=false,
-          _Ron(displayUnit="(mmHg.s)/ml") = 399967.162245)
+          Pknee = Modelica.Constants.eps,_Goff(displayUnit="ml/(mmHg.s)") = 0,
+          _Ron(displayUnit= "(mmHg.min)/ml") = 399967.162245, chatteringProtectionTime = 0.01, lastChange(displayUnit = "s"), useChatteringProtection = true,
+          useLimitationInputs=false)
           annotation (Placement(transformation(extent={{-132,70},{-106,44}})));
         Parts.AtrialElastance RAtrialElastance(EMIN=6666119.37075, EMAX=
               19998358.11225)
@@ -1271,8 +1271,8 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
           annotation (Placement(transformation(extent={{-180,88},{-150,122}})));
         Physiolibrary.Hydraulic.Components.IdealValveResistance TricuspidValve(
           _Goff=0,
-          useLimitationInputs=false,
-          _Ron(displayUnit="(mmHg.s)/ml") = 399967.162245)
+          _Ron(displayUnit= "(mmHg.min)/ml") = 399967.162245, chatteringProtectionTime = 0.01, lastChange(displayUnit = "s"), open(fixed = true, start = true), useChatteringProtection = true,
+          useLimitationInputs=false)
                               annotation (Placement(transformation(
               origin={-189,58},
               extent={{-13,12},{13,-12}})));
@@ -1390,6 +1390,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
      extends Hydraulic.Interfaces.OnePort;
      extends Icons.HydraulicResistor;
 
+      parameter Boolean enable = true "if false, no resistance is used"
+        annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
+
       parameter Boolean useConductanceInput = false
         "=true, if external conductance value is used"
         annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
@@ -1409,7 +1412,13 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       if not useConductanceInput then
         c=Conductance;
       end if;
-      q_in.q = c * (q_in.pressure - q_out.pressure);
+
+      // conditionally disable the resistance
+      if c >= Modelica.Constants.inf or not enable then
+        q_in.pressure = q_out.pressure;
+      else
+        q_in.q = c * (q_in.pressure - q_out.pressure);
+      end if;
       annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{
                 -100,-100},{100,100}}),
                        graphics={Text(
@@ -1427,16 +1436,17 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
     end Conductor;
 
     model Resistor
-      extends Physiolibrary.Hydraulic.Components.Conductor(final Conductance = 1/Resistance);
+      extends Physiolibrary.Hydraulic.Components.Conductor(final Conductance = conditionalConductance);
       parameter Physiolibrary.Types.HydraulicResistance Resistance
         "Hydraulic conductance if useConductanceInput=false";
+    protected
+                final parameter Physiolibrary.Types.HydraulicConductance conditionalConductance = if Resistance == 0 then Modelica.Constants.inf else 1/Resistance;
     end Resistor;
 
     model ElasticVessel "Elastic container for blood vessels, bladder, lumens"
      extends Icons.ElasticBalloon;
-     extends SteadyStates.Interfaces.SteadyState(
-                                        state_start=volume_start, storeUnit=
-          "ml");
+    //  extends SteadyStates.Interfaces.SteadyState(
+    //                                     state_start=volume_start);
       Interfaces.HydraulicPort_a
                            q_in
                             annotation (Placement(
@@ -1486,7 +1496,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
             rotation=270,
             origin={80,80})));
 
-      Types.RealIO.VolumeOutput volume      annotation (Placement(transformation(
+      Types.RealIO.VolumeOutput volume(start = volume_start, fixed = true)      annotation (Placement(transformation(
               extent={{-20,-20},{20,20}},
             rotation=270,
             origin={0,-100}), iconTransformation(
@@ -1523,9 +1533,8 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       //Collapsing state: the max function prevents the zero or negative input to logarithm, the logarithm brings more negative pressure for smaller volume
       //However this collapsing is limited with numerical precission, which is reached relatively soon.
 
-      state = volume; // der(volume) =  q_in.q;
-      change = q_in.q;
-     // assert(volume>=-Modelica.Constants.eps,"Collapsing of vessels are not supported!");
+      der(volume) =  q_in.q;
+      assert(volume>=-Modelica.Constants.eps,"Collapsing of vessels are not supported!", AssertionLevel.warning);
      annotation (
         Icon(coordinateSystem(preserveAspectRatio=false,extent={{-100,-100},{
                 100,100}}), graphics={Text(
@@ -1571,8 +1580,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       parameter Boolean useHeightInput = false "=true, if height input is used"
         annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
       parameter Types.Height H=0
-        "Height of hydrostatic column if useHeightInput=false"
-        annotation (Dialog(enable=not useFlowInput));
+        "Height of hydrostatic column if useHeightInput=false" annotation (Dialog(enable=not useHeightInput));
 
       Types.RealIO.HeightInput height(start=H)=h if useHeightInput
         "Vertical distance between top and bottom connector"
@@ -1631,8 +1639,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
 
     model Inertia "Inertia of the volumetric flow"
       extends SteadyStates.Interfaces.SteadyState(
-                                         state_start=volumeFlow_start,
-        storeUnit="ml/min");
+                                         state_start=volumeFlow_start);
       extends Interfaces.OnePort;
       extends Icons.Inertance;
       parameter Types.VolumeFlowRate volumeFlow_start=0.3
@@ -1654,6 +1661,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
 
     model IdealValve
       extends Interfaces.OnePort;
+      parameter Boolean useChatteringProtection = false annotation(Evaluate = true);
+      parameter Physiolibrary.Types.Time chatteringProtectionTime(displayUnit="ms") = 0 "Minimal period of time, in which a closed valve stays closed";
+      Physiolibrary.Types.Time lastChange(start = 0);
        Boolean open(start=true) "Switching state";
        Real passableVariable(start=0, final unit="1")
         "Auxiliary variable for actual position on the ideal diode characteristic";
@@ -1692,7 +1702,22 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
         gon = _Gon;
         goff = _Goff;
       end if;
-      open = passableVariable > Modelica.Constants.eps;
+      when useChatteringProtection and change(open) then
+        lastChange = time;
+      end when;
+
+      if not useChatteringProtection then
+        open = passableVariable > 0;
+      else
+        if pre(lastChange) + chatteringProtectionTime > time then
+          // under protection
+          open = pre(open);
+        else
+          // protection expired
+          open = passableVariable > 0;
+        end if;
+      end if;
+
       dp = (passableVariable*unitFlow)*(if open then 1/gon else 1) + Pknee;
       volumeFlowRate = (passableVariable*unitPressure)*(if open then 1 else goff) + goff*Pknee;
       annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
@@ -1831,9 +1856,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
     end Reabsorption;
 
     model ElasticMembrane "Interaction between internal and external cavities"
-     extends SteadyStates.Interfaces.SteadyState(
-                                        state_start=volume_start, storeUnit=
-          "ml");
+     // extends SteadyStates.Interfaces.SteadyState(state_start=volume_start);
      extends Icons.InternalElasticBalloon;
       Interfaces.HydraulicPort_a
                            q_int "Internal space"
@@ -1855,9 +1878,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       q_int.q + q_ext.q = 0;
       q_int.pressure = (stressedVolume/Compliance) + q_ext.pressure;
       stressedVolume = max(volume-zeroPressureVolume,0);
-      state = volume; // der(volume) =  q_int.q;
-      change = q_int.q;
-      // assert(volume>=-Modelica.Constants.eps,"Totally collapsed compartments are not supported!");
+      der(volume) =  q_int.q;
+
+      assert(volume>=-Modelica.Constants.eps,"Totally collapsed compartments are not supported!", AssertionLevel.warning);
       annotation (        Documentation(revisions="<html>
 <p><i>2009-2010</i></p>
 <p>Marek Matejak, Charles University, Prague, Czech Republic </p>

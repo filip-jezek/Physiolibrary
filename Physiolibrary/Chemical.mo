@@ -240,8 +240,8 @@ package Chemical "Please use 'Chemical' library instead!"
             points={{-84,40},{-90,40},{-90,-6},{-94,-6}}, color={0,0,127}));
       connect(elasticVessel1.volume, substance1.solutionVolume) annotation (
           Line(points={{76,40},{72,40},{72,-6},{66,-6}}, color={0,0,127}));
-      connect(flowMeasure.volumeFlow, advectionStream.solutionFlow) annotation
-        (Line(points={{30,38},{10,38},{10,-3},{-10,-3}}, color={0,0,127}));
+      connect(flowMeasure.volumeFlow, advectionStream.solutionFlow) annotation (
+         Line(points={{30,38},{10,38},{10,-3},{-10,-3}}, color={0,0,127}));
       annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
             coordinateSystem(preserveAspectRatio=false)),
         Documentation(info="<html>
@@ -253,7 +253,7 @@ package Chemical "Please use 'Chemical' library instead!"
 </html>"),
         experiment(StopTime=20));
     end TwoConcentrationCompartments;
-	
+
     package Hemoglobin "Hemoglobin blood gases binding"
       model Allosteric_Hemoglobin_MWC "Monod,Wyman,Changeux (1965)"
       extends Modelica.Icons.Example;
@@ -3280,8 +3280,7 @@ package Chemical "Please use 'Chemical' library instead!"
       extends SteadyStates.Interfaces.SteadyState(
       state(nominal=NominalSolute),
       change(nominal=NominalSolute/60),
-      state_start=solute_start,
-      storeUnit="mmol");
+      state_start=solute_start);
 
       parameter Types.AmountOfSubstance solute_start(nominal=NominalSolute) = 1e-8
         "Initial solute amount in compartment"
@@ -4221,6 +4220,7 @@ package Chemical "Please use 'Chemical' library instead!"
        parameter Real diffusion_coefficient(unit="m2/s", quantity="Mass diffusivity coefficient") = 0 "diffusion coefficient. Default = 0";
        Modelica.SIunits.Area area_tube_crosssection=3.14*(d/2)^2
       "crosssection tube area";
+      Physiolibrary.Types.Volume volume_total = area_tube_crosssection * length;
        Physiolibrary.Types.Velocity v=q/area_tube_crosssection
       "velocity of the flow in m/s";
        Physiolibrary.Types.Concentration c[N];
@@ -4314,7 +4314,7 @@ package Chemical "Please use 'Chemical' library instead!"
         <p>Filip Jezek, Charles University, Prague, Czech Republic </p>
         </html>"));
     end AdvectionStream;
-	
+
     model SolutePump "Prescribed solute flow"
       extends Interfaces.OnePort;
       extends Interfaces.ConditionalSoluteFlow;
@@ -4358,7 +4358,7 @@ package Chemical "Please use 'Chemical' library instead!"
 
       parameter Types.Fraction Dilution=1
         "Concentration ratio after per before dilution (0..no solutes, 1..no dilution) if useDilutionInput=false"
-        annotation (Dialog(enable=not useSolventFlow));
+        annotation (Dialog(enable=not useDilutionInput));
 
       Types.RealIO.FractionInput dilution(start=Dilution)= d if useDilutionInput
         "Fraction of final undilutes solution"
