@@ -117,13 +117,23 @@ package Physiolibrary "Modelica library for Physiology (version 2.4.0)"
 
      annotation (Documentation(info="<html>
 <ul>
-<li><span style=\"color: #333333;\">Remove support for steady states, as it was affecting complex systems</span></li>
+<li>Hydraulics</li>
+<ul>
+<li><span style=\"color: #333333;\">Removed support for steady states in Hydraulics package, as it was affecting complex systems</span></li>
+<li><span style=\"color: #333333;\">Added support for chattering protection in hydraulic valves</span></li>
+<li><span style=\"color: #333333;\">Added conditional resistance in hydraulic resistance model. The resistance could be turned on or off in child models</span></li>
+</ul>
+<li><span style=\"color: #333333;\">Chemical</span></li>
+<ul>
+<li><span style=\"color: #333333;\">Added AdvectionStream into the Chemical package</span></li>
+<li><span style=\"color: #333333;\">Population</span></li>
+<li><span style=\"color: #333333;\">Added StreamDivider to support for complex COVID models</span></li>
+</ul>
+<li><span style=\"color: #333333;\">Types</span></li>
+<ul>
 <li><span style=\"color: #333333;\">Added some new types</span></li>
-<li><span style=\"color: #333333;\">Added AdvectionStream</span></li>
-<li><span style=\"color: #333333;\">Fix:</span></li>
-<li><ul>
-<li><span style=\"color: #333333;\">Osmotic source input</span></li>
-</ul></li>
+</ul>
+<li><span style=\"color: #333333;\">Minor bugfixes (e.g. Osmotic source input)</span></li>
 </ul>
 </html>"));
   end Version_2_4_0;
