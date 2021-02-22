@@ -338,6 +338,3 @@ defineUnitConversion("1", "%",100);
 // defineDefaultDisplayUnit("C", "meq");
 // defineDefaultDisplayUnit("V", "mV");
 
-
-
-

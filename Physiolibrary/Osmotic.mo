@@ -404,7 +404,6 @@ package Osmotic "Please use 'Chemical' library instead!"
       end if;
 
       q_in.q =   perm * ( (-po + q_out.o*(Modelica.Constants.R*to)) - (-pi + q_in.o*(Modelica.Constants.R*ti)));
-               //if((-po + q_out.o*(Modelica.Constants.R*to)) - (-pi + q_in.o*(Modelica.Constants.R*ti)) <=0) then 0 else
 
       opi = q_in.o*(Modelica.Constants.R*ti);
       opo = q_out.o*(Modelica.Constants.R*to);

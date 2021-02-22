@@ -1445,8 +1445,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
 
     model ElasticVessel "Elastic container for blood vessels, bladder, lumens"
      extends Icons.ElasticBalloon;
-    //  extends SteadyStates.Interfaces.SteadyState(
-    //                                     state_start=volume_start);
+    // extends SteadyStates.Interfaces.SteadyState(state_start=volume_start, storeUnit="ml");
       Interfaces.HydraulicPort_a
                            q_in
                             annotation (Placement(
@@ -1638,8 +1637,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
     end HydrostaticColumn;
 
     model Inertia "Inertia of the volumetric flow"
-      extends SteadyStates.Interfaces.SteadyState(
-                                         state_start=volumeFlow_start);
+//      extends SteadyStates.Interfaces.SteadyState(                                         state_start=volumeFlow_start);
       extends Interfaces.OnePort;
       extends Icons.Inertance;
       parameter Types.VolumeFlowRate volumeFlow_start=0.3
@@ -1649,8 +1647,8 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       parameter Types.HydraulicInertance I "Inertance";
 
     equation
-      state = q_in.q;      // I*der(q_in.q) = (q_in.pressure - q_out.pressure);
-      change = (q_in.pressure - q_out.pressure)/I;
+      I*der(q_in.q) = (q_in.pressure - q_out.pressure);
+      // change = (q_in.pressure - q_out.pressure)/I;
       annotation (                Documentation(info="<html>
 <p>Inertance I of the simple tube could be calculated as I=ro*l/A, where ro is fuid density, l is tube length and A is tube cross-section area.</p>
 </html>", revisions="<html>
