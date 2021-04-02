@@ -1438,9 +1438,9 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
     model Resistor
       extends Physiolibrary.Hydraulic.Components.Conductor(final Conductance = conditionalConductance);
       parameter Physiolibrary.Types.HydraulicResistance Resistance
-        "Hydraulic conductance if useConductanceInput=false";
+        "Hydraulic conductance if useConductanceInput=false" annotation (Dialog(enable=not useConductanceInput));
     protected
-                final parameter Physiolibrary.Types.HydraulicConductance conditionalConductance = if Resistance == 0 then Modelica.Constants.inf else 1/Resistance;
+                final parameter Physiolibrary.Types.HydraulicConductance conditionalConductance = if useConductanceInput or Resistance == 0 then Modelica.Constants.inf else 1/Resistance;
     end Resistor;
 
     model ElasticVessel "Elastic container for blood vessels, bladder, lumens"
@@ -1462,9 +1462,6 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
         "Maximal volume, that does not generate pressure if useV0Input=false"
         annotation (Dialog(enable=not useV0Input)); //default = 1e-5 ml
 
-        parameter Types.Volume CollapsingPressureVolume = 1e-12
-        "Maximal volume, which generate negative collapsing pressure"; //default = 1e-6 ml
-
        Types.RealIO.VolumeInput zeroPressureVolume(start=ZeroPressureVolume)= zpv if useV0Input
                                                         annotation (Placement(transformation(
               extent={{-20,-20},{20,20}},
@@ -1475,7 +1472,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
         annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
       parameter Types.HydraulicCompliance Compliance = 1
         "Compliance if useComplianceInput=false"
-        annotation (Dialog(enable=not useComplianceInput));
+        annotation (Dialog(enable=not useComplianceInput), HideResult = useComplianceInput);
 
       Types.RealIO.HydraulicComplianceInput compliance(start=Compliance) = c if useComplianceInput
                                                             annotation (Placement(
@@ -1487,8 +1484,8 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
         annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
       parameter Types.Pressure ExternalPressure=0
         "External pressure. Set zero if internal pressure is relative to external. Valid only if useExternalPressureInput=false."
-        annotation (Dialog(enable=not useExternalPressureInput));
-      parameter Types.Pressure MinimalCollapsingPressure = -101325;
+        annotation (Dialog(enable=not useExternalPressureInput), HideResult = useExternalPressureInput);
+
       Types.RealIO.PressureInput externalPressure(start=ExternalPressure) = ep if useExternalPressureInput
                                                        annotation (Placement(transformation(
               extent={{-20,-20},{20,20}},
@@ -1502,6 +1499,10 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
             extent={{-20,-20},{20,20}},
             rotation=270,
             origin={60,-100})));
+       parameter Physiolibrary.Types.Volume excessVolume_min(min = -Modelica.Constants.inf) = 0 "Minimal pressure below zeroPressureVolume" annotation(Evaluate = true);
+      parameter Types.Pressure MinimalCollapsingPressure(min = -Modelica.Constants.inf) = -101325;
+        parameter Types.Volume CollapsingPressureVolume( min = -Modelica.Constants.inf) = 1e-12
+        "Maximal volume, which generate negative collapsing pressure"; //default = 1e-6 ml
 
     protected
       Types.Volume zpv;
@@ -1519,13 +1520,13 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
       if not useExternalPressureInput then
         ep=ExternalPressure;
       end if;
-      excessVolume = max( 0, volume - zpv);
+      excessVolume = max(excessVolume_min, volume - zpv);
       q_in.pressure =
       smooth(0,
         if noEvent(volume>CollapsingPressureVolume) then
           (excessVolume/c + ep)
-        else
-          (a*log(max(Modelica.Constants.eps,volume/CollapsingPressureVolume)) + ep));
+         else
+           (a*log(max(Modelica.Constants.eps,volume/CollapsingPressureVolume)) + ep));
       //then: normal physiological state
       //else: abnormal collapsing state
 
@@ -1637,7 +1638,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
     end HydrostaticColumn;
 
     model Inertia "Inertia of the volumetric flow"
-//      extends SteadyStates.Interfaces.SteadyState(                                         state_start=volumeFlow_start);
+      //      extends SteadyStates.Interfaces.SteadyState(                                         state_start=volumeFlow_start);
       extends Interfaces.OnePort;
       extends Icons.Inertance;
       parameter Types.VolumeFlowRate volumeFlow_start=0.3
