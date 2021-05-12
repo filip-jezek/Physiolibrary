@@ -1646,9 +1646,15 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
          annotation (Dialog(group="Initialization"));                                                          //5 l/min is normal volumetric flow in aorta
 
       parameter Types.HydraulicInertance I "Inertance";
+      parameter Types.HydraulicResistance R = 0 "optional additional resistance";
+      parameter Boolean enabled = true "false for direct throughput, i.e. no inertance or resistance are applied";
 
     equation
-      I*der(q_in.q) = (q_in.pressure - q_out.pressure);
+      if enabled then
+        I*der(q_in.q) + R*q_in.q = (q_in.pressure - q_out.pressure);
+      else
+        q_in.pressure - q_out.pressure  = 0;
+      end if;
       // change = (q_in.pressure - q_out.pressure)/I;
       annotation (                Documentation(info="<html>
 <p>Inertance I of the simple tube could be calculated as I=ro*l/A, where ro is fuid density, l is tube length and A is tube cross-section area.</p>
