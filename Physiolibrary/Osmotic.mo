@@ -654,7 +654,7 @@ package Osmotic "Please use 'Chemical' library instead!"
     extends Modelica.Icons.SensorsPackage;
     model FlowMeasure "Measurement of flux through semipermeable membrane"
       extends Interfaces.OnePort;
-      extends Modelica.Icons.RotationalSensor;
+      extends Modelica.Icons.RoundSensor;
       //extends Icons.FlowMeasure;
 
       Types.RealIO.VolumeFlowRateOutput volumeFlowRate "Flux through membrane"

@@ -1100,7 +1100,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
           discrete Physiolibrary.Types.Time Tas, T0, Tvs;
           parameter Physiolibrary.Types.Time Tav(displayUnit = "s") = 0.01
             "atrioventricular delay";
-          discrete Modelica.SIunits.Time HP(start = 0) "heart period";
+          discrete Modelica.Units.SI.Time HP(start=0) "heart period";
           Boolean b(start = false);
           Physiolibrary.Types.RealIO.FrequencyInput HR "heart rate" annotation(Placement(transformation(extent = {{-12, 68}, {28, 108}}), iconTransformation(extent = {{-20, -20}, {20, 20}}, rotation = 270, origin = {0, 80})));
         equation
@@ -1390,7 +1390,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
      extends Hydraulic.Interfaces.OnePort;
      extends Icons.HydraulicResistor;
 
-      parameter Boolean enable = true "if false, no resistance is used"
+      parameter Boolean enable=true   "if false, no resistance is used"
         annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
 
       parameter Boolean useConductanceInput = false
@@ -1587,7 +1587,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
                                                    annotation (Placement(transformation(extent={{-20,-20},
                 {20,20}},
             origin={-60,0})));
-      parameter Modelica.SIunits.Density ro=1060; //liquid density
+      parameter Modelica.Units.SI.Density ro=1060;//liquid density
       parameter Boolean useExternalG = false
         "=true, if external gravity acceleration is used"
         annotation(Evaluate=true, HideResult=true, choices(checkBox=true),Dialog(group="External inputs/outputs"));
@@ -1647,7 +1647,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
 
       parameter Types.HydraulicInertance I "Inertance";
       parameter Types.HydraulicResistance R = 0 "optional additional resistance";
-      parameter Boolean enabled = true "false for direct throughput, i.e. no inertance or resistance are applied";
+      parameter Boolean enabled=true   "false for direct throughput, i.e. no inertance or resistance are applied"  annotation(Evaluate=true, HideResult=true, choices(checkBox=true));
 
     equation
       if enabled then
@@ -1661,7 +1661,11 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
 </html>", revisions="<html>
 <p><i>2009-2010</i></p>
 <p>Marek Matejak, Charles University, Prague, Czech Republic </p>
-</html>"));
+</html>"),     Icon(graphics={Line(
+              points={{-100,0},{102,0}},
+              color={0,0,0},
+              thickness=1,
+              visible = not enabled)}));
     end Inertia;
 
     model IdealValve
@@ -1899,7 +1903,7 @@ package Hydraulic "Domain with Pressure and Volumetric Flow"
     model FlowMeasure "Volumetric flow between ports"
       extends Interfaces.OnePort;
       //extends Icons.FlowMeasure;
-      extends Modelica.Icons.RotationalSensor;
+      extends Modelica.Icons.RoundSensor;
 
       Types.RealIO.VolumeFlowRateOutput volumeFlow "Actual volume flow rate"
                              annotation (Placement(transformation(extent={{-20,-20},
