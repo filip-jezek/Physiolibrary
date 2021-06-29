@@ -23,8 +23,6 @@ Library contains also the icons for higher level (HumMod) subsystem implementati
 ## Installation
 * Physiolibrary/package.mo can be directly opened by each Modelica environments. 
 
-* OpenModelica: Physiolibrary is already included from version 1.9.
-
 * Dymola support of physical units:
   * Using Windows batch script: call "Physiolibrary\Resources\Install\Dymola\install.bat"
   * Manually: copy the Physiolibrary/Resources/DisplayUnits/displayUnits.mos over dymola-install-dir/insert/displayUnits.mos
@@ -33,14 +31,21 @@ Library contains also the icons for higher level (HumMod) subsystem implementati
 ## Prerequisities
 
 * environment supporting Modelica 3.2 or higher ([Dymola](http://www.3ds.com/products-services/catia/capabilities/modelica-systems-simulation-info/dymola/trial-version/), [OpenModelica](https://build.openmodelica.org/omc/builds/windows/releases/), [SystemModeler](http://www.wolfram.com/system-modeler/trial/) or [JModelica](http://www.jmodelica.org/binary))
-* Modelica Standard Library 3.2.1 ([MSL](https://github.com/modelica/Modelica))
+* Modelica Standard Library 4.0 ([MSL](https://github.com/modelica/Modelica))
 
 ## Current release
 
-Download [Physiolibrary 2.3.1 (2015-09-15)](../../archive/v2.3.1.zip)
+Download [Physiolibrary 2.5 (2021-02-06)](https://github.com/filip-jezek/Physiolibrary/archive/refs/tags/v2.4.zip)
 
 #### Release notes
 
+*  [Version v2.5 (2020-02-22)](https://github.com/filip-jezek/Physiolibrary/releases/tag/v2.5)
+  *  Upgrade to MSL 4.0
+  *  parametrically disabling inertance and resistance (to keep inheritance in complex models)
+  *  optionally negative excessVolume in Compliance
+*  [Version v2.4 (2020-02-22)](https://github.com/filip-jezek/Physiolibrary/archive/refs/tags/v2.4.zip)
+ *  Disabling steady state for hydraulics
+ *  minor improvements and fixes
 *  [Version v2.3.1 (2015-09-15)](../../archive/v2.3.1.zip)
  * Change of license to [BSD](http://opensource.org/licenses/BSD-3-Clause): 
 		* no additional restricions 
@@ -147,6 +152,8 @@ Release manager: [Marek Matejak](http://github.com/MarekMatejak)
 Contributor: 
 [Tomas Kulhanek] (https://github.com/TomasKulhanek), 
 [tbeu] (https://github.com/tbeu)
+[Filip-jezek] (https://github.com/filip-jezek)
+
 
 You may report bugs or issues to [project issues](https://github.com/MarekMatejak/Physiolibrary/issues) or to e-mail: marek\<at\>matfyz\<dot\>cz
 
